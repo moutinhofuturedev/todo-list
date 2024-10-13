@@ -1,4 +1,8 @@
 export interface TodoProps {
-	id: string
-	description: string
+	data: {
+		todos: {
+			id: string
+			description: string
+		}[]
+	}
 }

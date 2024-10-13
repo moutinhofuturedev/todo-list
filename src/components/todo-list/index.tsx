@@ -1,45 +1,35 @@
-import { getTodo } from '@/api/get-todo'
-import { postTodo } from '@/api/post-todo'
-import { removeTodo } from '@/api/remove-todo'
+import { createTodo } from '@/api/create-todo'
+import { deleteTodo } from '@/api/delete-todo'
+import { fetchTodo } from '@/api/fetch-todo'
 import type { TodoProps } from '@/types/todo-props'
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Skeleton } from '../skeleton'
 
 export const TodoList = () => {
-	const queryClient = new QueryClient()
 	const [todo, setTodo] = useState('')
 
 	const {
 		data: todoList,
 		refetch,
-		isLoading: isTodoListLoading,
-	} = useQuery<TodoProps[]>({
+		isFetching: isTodoListFetching,
+	} = useQuery<TodoProps>({
 		queryKey: ['todo'],
-		queryFn: getTodo,
+		queryFn: fetchTodo,
 		staleTime: 1000 * 60,
 	})
 
-	const { mutateAsync: postTodoMutation, isPending: isPostPending } =
-		useMutation({
-			mutationFn: postTodo,
-			onSuccess: () => {
-				setTodo('')
+	const { mutateAsync: createTodoMutation } = useMutation({
+		mutationFn: createTodo,
+		onSuccess: () => {
+			setTodo('')
 
-				// Atualiza a lista de tarefas
-				refetch()
-			},
+			refetch()
+		},
+	})
 
-			onError: (_, context) => {
-				// Remove a tarefa criada no erro
-				queryClient.setQueryData(['todos'], (old: TodoProps[]) =>
-					old.filter(todo => todo.id !== context.id),
-				)
-			},
-		})
-
-	const { mutateAsync: removeTodoMutation } = useMutation({
-		mutationFn: removeTodo,
+	const { mutateAsync: deleteTodoMutation } = useMutation({
+		mutationFn: deleteTodo,
 		onSuccess: () => {
 			refetch()
 		},
@@ -61,12 +51,7 @@ export const TodoList = () => {
 						className='block w-full p-4 text-sm text-zinc-900 border border-zinc-300 rounded-lg bg-zinc-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-zinc-100 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-zinc-500 dark:focus:ring-blue-500 dark:focus:border-blue-500'
 					/>
 					<button
-						onClick={() =>
-							postTodoMutation({
-								description: todo,
-								id: Math.random().toString(36).slice(2),
-							})
-						}
+						onClick={() => createTodoMutation(todo)}
 						disabled={!todo}
 						type='button'
 						className='text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-50 disabled:cursor-not-allowed'
@@ -76,15 +61,15 @@ export const TodoList = () => {
 				</div>
 
 				<ul className='w-full'>
-					{todoList?.length === 0 && (
+					{todoList?.data.todos?.length === 0 && !isTodoListFetching && (
 						<span className='text-center text-lg font-semibold'>
 							Nenhuma tarefa criada
 						</span>
 					)}
-					{isTodoListLoading ? (
+					{isTodoListFetching ? (
 						<Skeleton />
 					) : (
-						todoList?.map(todo => {
+						todoList?.data.todos?.map(todo => {
 							return (
 								<li
 									className='flex items-center justify-between py-3 px-4 border rounded-lg border-zinc-300 mt-2'
@@ -95,7 +80,7 @@ export const TodoList = () => {
 									</span>
 									<button
 										className='text-white bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-										onClick={() => removeTodoMutation(todo.id)}
+										onClick={() => deleteTodoMutation(todo.id)}
 									>
 										deletar
 									</button>
@@ -103,7 +88,6 @@ export const TodoList = () => {
 							)
 						})
 					)}
-					{isPostPending && <Skeleton />}
 				</ul>
 			</div>
 		</div>
