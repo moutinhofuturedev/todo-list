@@ -4,6 +4,7 @@ import { fetchTodo } from '@/api/fetch-todo'
 import type { TodoProps } from '@/types/todo-props'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Skeleton } from '../skeleton'
 
 export const TodoList = () => {
@@ -26,12 +27,24 @@ export const TodoList = () => {
 
 			refetch()
 		},
+		onError: error => {
+			toast.error(`${error.message}`, {
+				position: 'top-right',
+				duration: 4000,
+			})
+		},
 	})
 
 	const { mutateAsync: deleteTodoMutation } = useMutation({
 		mutationFn: deleteTodo,
 		onSuccess: () => {
 			refetch()
+		},
+		onError: error => {
+			toast.error(`${error.message}`, {
+				position: 'top-right',
+				duration: 4000,
+			})
 		},
 	})
 

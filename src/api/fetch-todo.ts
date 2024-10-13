@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios'
+import axios from 'axios'
 
 const GET_TODOS = `
   {
@@ -18,7 +19,14 @@ export const fetchTodo = async () => {
 
 		return response.data
 	} catch (error) {
-		console.error('Erro ao realizar a requisição:', error)
-		throw error
+		if (axios.isAxiosError(error)) {
+			console.error('Erro na requisição:', error.message)
+			throw new Error(
+				'Erro ao conectar com o servidor. Por favor, tente novamente.',
+			)
+		} else {
+			console.error('Erro desconhecido:', error)
+			throw new Error('Algo deu errado. Por favor, tente novamente.')
+		}
 	}
 }

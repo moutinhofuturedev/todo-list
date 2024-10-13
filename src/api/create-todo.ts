@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios'
+import axios from 'axios'
 
 const CREATE_TODO_MUTATION = `
   mutation CreateTodo($description: String!) {
@@ -10,18 +11,24 @@ const CREATE_TODO_MUTATION = `
 `
 
 export const createTodo = async (description: string) => {
-	// await new Promise(resolve => setTimeout(resolve, 2000))
 	try {
 		const response = await api.post('', {
 			query: CREATE_TODO_MUTATION,
 			variables: {
-				description, // Passa o valor da descrição
+				description,
 			},
 		})
 
-		return response.data.data.createTodo // Retorna o novo todo criado
+		return response.data.data.createTodo
 	} catch (error) {
-		console.error('Erro ao criar o todo:', error)
-		throw error
+		if (axios.isAxiosError(error)) {
+			console.error('Erro na requisição:', error.message)
+			throw new Error(
+				'Erro ao conectar com o servidor. Por favor, tente novamente.',
+			)
+		} else {
+			console.error('Erro desconhecido:', error)
+			throw new Error('Algo deu errado. Por favor, tente novamente.')
+		}
 	}
 }
