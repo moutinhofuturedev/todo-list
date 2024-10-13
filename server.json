@@ -1,0 +1,16 @@
+{
+  "todo-list": [
+    {
+      "id": "r21daz6rgy",
+      "description": "Estudar typescript"
+    },
+    {
+      "id": "pf1rsozrtsf",
+      "description": "Aprender Node.js"
+    },
+    {
+      "id": "6rodl85ggx",
+      "description": "Estudar async await"
+    }
+  ]
+}
