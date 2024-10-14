@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/env.ts","./src/main.tsx","./src/vite-env.d.ts","./src/api/create-todo.ts","./src/api/delete-todo.ts","./src/api/fetch-todo.ts","./src/components/skeleton/index.tsx","./src/components/todo-list/index.tsx","./src/lib/axios.ts","./src/lib/react-query.ts","./src/types/todo-props.ts"],"version":"5.6.3"}
