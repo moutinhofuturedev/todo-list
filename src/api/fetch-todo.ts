@@ -1,4 +1,5 @@
 import { api } from '@/lib/axios'
+import type { TodoProps } from '@/types/todo-props'
 import axios from 'axios'
 
 const GET_TODOS = `
@@ -10,7 +11,7 @@ const GET_TODOS = `
   }
 `
 
-export const fetchTodo = async () => {
+export const fetchTodo = async (): Promise<TodoProps> => {
 	try {
 		await new Promise(resolve => setTimeout(resolve, 2000))
 		const response = await api.post('', {

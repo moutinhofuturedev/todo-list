@@ -25,6 +25,11 @@ export const TodoList = () => {
 		onSuccess: () => {
 			setTodo('')
 
+			toast.success('Tarefa criada com sucesso!', {
+				position: 'top-center',
+				duration: 4000,
+			})
+
 			refetch()
 		},
 		onError: error => {
@@ -38,6 +43,10 @@ export const TodoList = () => {
 	const { mutateAsync: deleteTodoMutation } = useMutation({
 		mutationFn: deleteTodo,
 		onSuccess: () => {
+			toast.success('Tarefa excluída com sucesso!', {
+				position: 'top-center',
+				duration: 4000,
+			})
 			refetch()
 		},
 		onError: error => {
