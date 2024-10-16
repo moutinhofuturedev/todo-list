@@ -58,7 +58,10 @@ export const TodoList = () => {
 	})
 
 	return (
-		<div className='flex flex-col items-center h-screen px-8'>
+		<div
+			className='flex flex-col items-center h-screen px-8'
+			aria-hidden='true'
+		>
 			<div className='flex flex-col items-start mt-16 gap-8 max-w-[700px] w-full'>
 				<h1 className='text-4xl font-bold'>Todo App</h1>
 
@@ -70,7 +73,7 @@ export const TodoList = () => {
 						value={todo}
 						onChange={e => setTodo(e.target.value)}
 						required
-						className='block w-full p-4 text-sm text-zinc-900 border border-zinc-300 rounded-lg bg-zinc-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-zinc-100 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-zinc-500 dark:focus:ring-blue-500 dark:focus:border-blue-500'
+						className='block w-full p-4 text-sm text-zinc-900 border border-zinc-300 rounded-lg bg-zinc-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-zinc-100 dark:border-zinc-400 dark:placeholder-zinc-400 dark:text-zinc-500 dark:focus:ring-blue-500 dark:focus:border-blue-500'
 					/>
 					<button
 						onClick={() => createTodoMutation(todo)}
